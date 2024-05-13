@@ -72,8 +72,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+//    implementation(libs.accompanist.coil)
+    implementation(libs.coil.compose)
     implementation(platform("io.github.jan-tennert.supabase:bom:2.4.1"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:2.3.11")
-
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +24,7 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import coil.compose.rememberImagePainter
 
 val supabase = createSupabaseClient(
     supabaseUrl = "https://eobckgfvzhrvreqsjivr.supabase.co",
@@ -38,7 +40,8 @@ data class Vid(
     val description: String,
     val likes: Int,
     val channelName: String,
-    val videoUrl: String
+    val videoUrl: String,
+    val imageUrl: String
 )
 
 
@@ -88,6 +91,11 @@ fun VideoList(searchText: String, paddingValues: PaddingValues) {
             Column(
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
+                Image(
+                    painter = rememberImagePainter(vid.imageUrl),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
                 Text(vid.title)
                 Text("Likes: ${vid.likes}")
                 Text("Channel: ${vid.channelName}")
@@ -96,6 +104,8 @@ fun VideoList(searchText: String, paddingValues: PaddingValues) {
         }
     }
 }
+
+
 
 @Composable
 fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
@@ -117,64 +127,3 @@ fun GreetingPreview() {
     MyApplication2Theme {
     }
 }
-
-
-
-//@Composable
-//fun VideoList(paddingValues: PaddingValues) {
-////    Log.d("VideoList", "Loading Videos")
-//    var searchText by remember { mutableStateOf("") }
-//    var vids by remember { mutableStateOf<List<Vid>>(listOf()) }
-//    LaunchedEffect(Unit) {
-//        withContext(Dispatchers.IO){
-//            vids = supabase.from("videos").select().decodeList<Vid>()
-//        }
-//    }
-//
-//    // Filter videos based on search text
-//    val filteredVids = if (searchText.isBlank()) {
-//        vids
-//    } else {
-//        vids.filter { it.title.contains(searchText, ignoreCase = true) }
-//    }
-//    Column {
-//        SearchBar(onSearchTextChanged = { searchText = it })
-//        LazyColumn(contentPadding = paddingValues) {
-//            items(filteredVids, key = { vid -> vid.id}) { vid ->
-//                Column(
-//                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-//                ) {
-//                    Text(vid.title)
-//                    Text("Likes: ${vid.likes}")
-//                    Text("Channel: ${vid.channelName}")
-//                    Text(vid.description)
-//                }
-//            }
-//        }
-//    }
-
-//    LazyColumn(contentPadding = paddingValues) {
-//        items(vids, key = { vid -> vid.id},) {
-//            vid ->
-//            Text( vid.title , modifier = Modifier.padding(top = 8.dp))
-//            Text("Likes: ${vid.likes}")
-//            Text("Channel: ${vid.channelName}")
-//            Text(vid.description)
-//        }
-//    }
-//}
-//@Composable
-//fun SearchBar(onSearchTextChanged: (String) -> Unit) {
-//    var searchText by remember { mutableStateOf("") }
-//    TextField(
-//        value = searchText,
-//        onValueChange = {
-//            searchText = it
-//            onSearchTextChanged(it)
-//        },
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp),
-//        placeholder = { Text("Search videos...") }
-//    )
-//}
